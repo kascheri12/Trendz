@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_gravity="center"
+    android:layout_width="@dimen/swipe_item_width"
+    android:layout_height="@dimen/swipe_item_height">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:background="@drawable/bg01_852x1279"
+        android:id="@+id/itemImage"/>
+
+    <TextView
+        android:id="@+id/helloText"
+        android:textSize="40sp"
+        android:textColor="@android:color/white"
+        android:gravity="bottom|center"
+        tools:text="@string/hello_world"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</FrameLayout>

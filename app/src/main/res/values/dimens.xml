@@ -1,0 +1,28 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="login_or_textview">8dp</dimen>
+    <dimen name="activity_bottom_padding">0dp</dimen>
+
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
+    <dimen name="action_bar_height">32dp</dimen>
+
+    <dimen name="swipe_item_width">340dp</dimen>
+    <dimen name="swipe_item_height">400dp</dimen>
+
+    <dimen name="header_height">200dp</dimen>
+    <dimen name="tabs_height">65dp</dimen>
+
+    <dimen name="layout_padding_b_frame_layout">20dp</dimen>
+    <dimen name="layout_padding_a_frame_layout">30dp</dimen>
+    <dimen name="layout_padding_content_frame">0dp</dimen>
+    <dimen name="dashboard_icon_grid_height">400dp</dimen>
+    <dimen name="dashboard_item_grid_margin_top">85dp</dimen>
+    <dimen name="layout_padding_b_frame_layout_top">80dp</dimen>
+    <dimen name="dashboard_icon_height_width">200dp</dimen>
+    <dimen name="tab_height">65dp</dimen>
+    <dimen name="profile_header_width">200dp</dimen>
+
+</resources>

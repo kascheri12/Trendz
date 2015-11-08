@@ -1,0 +1,47 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
+        <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+        <!--<item name="colorPrimary">@color/colorPrimary</item>-->
+        <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+        <!--<item name="colorAccent">@color/colorAccent</item>-->
+    <!--</style>-->
+    <!--<style name="AppTheme.NoActionBar">-->
+        <!--<item name="windowActionBar">false</item>-->
+        <!--<item name="windowNoTitle">true</item>-->
+    <!--</style>-->
+    <!--<style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />-->
+
+
+    <style name="TranslucentActionBar" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:background">@drawable/ab_transparent</item>
+    </style>
+
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="ScrollableDialogStyle">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@style/ScrollableDialogAnimations</item>
+    </style>
+
+    <style name="ScrollableDialogAnimations">
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+        <!--<item name="android:windowExitAnimation">@android:anim/fade_out</item>-->
+    </style>
+
+
+    <style name="AppThemeKenny" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/tienPrimary</item>
+        <item name="colorPrimaryDark">@color/tienPrimaryDark</item>
+        <item name="colorAccent">@color/tienAccent</item>
+    </style>
+</resources>
