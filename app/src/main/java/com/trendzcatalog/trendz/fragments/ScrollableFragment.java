@@ -66,7 +66,7 @@ public class ScrollableFragment extends Fragment {
                         icon.setImageDrawable(res.getDrawable(R.drawable.ic_home_white_24dp));
                         break;
                     case 1:
-                        icon.setImageDrawable(res.getDrawable(R.drawable.ic_search_white_24dp));
+                        icon.setImageDrawable(res.getDrawable(R.drawable.ic_person_white_24dp));
                         break;
                     default:
                         throw new IllegalStateException("Invalid position: " + position);
@@ -78,7 +78,7 @@ public class ScrollableFragment extends Fragment {
         final ViewPagerAdapter adapter = new ViewPagerAdapter(
                 getChildFragmentManager(),
                 getResources(),
-                Arrays.asList(ListViewFragment.newInstance(0x80FF0000), RecyclerViewFragment.newInstance(0x8000FF00))
+                Arrays.asList(ListViewFragment.newInstance(), RecyclerViewFragment.newInstance())
         );
 
         pager.setAdapter(adapter);

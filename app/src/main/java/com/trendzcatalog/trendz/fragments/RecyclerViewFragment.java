@@ -16,12 +16,8 @@ import com.trendzcatalog.trendz.adapters.RecyclerAdapter;
  */
 public class RecyclerViewFragment extends BaseFragment {
 
-    static final String TAG = "tag.RecyclerViewFragment";
-
-    public static RecyclerViewFragment newInstance(int color) {
+    public static RecyclerViewFragment newInstance() {
         final Bundle bundle = new Bundle();
-        bundle.putInt(ARG_COLOR, color);
-
         final RecyclerViewFragment fragment = new RecyclerViewFragment();
         fragment.setArguments(bundle);
         return fragment;
@@ -46,12 +42,12 @@ public class RecyclerViewFragment extends BaseFragment {
 
     @Override
     public CharSequence getTitle(Resources r) {
-        return "RecyclerView";
+        return null;
     }
 
     @Override
     public String getSelfTag() {
-        return TAG;
+        return null;
     }
 
     @Override

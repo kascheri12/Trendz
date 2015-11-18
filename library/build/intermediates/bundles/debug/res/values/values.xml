@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BlurDrawerLayout"><attr format="integer" name="blurRadius"/><attr format="float" name="downScaleFactor"/><attr format="reference" name="drawerUpImageId"/><attr format="reference" name="openDescription"/><attr format="reference" name="closeDescription"/><attr format="reference" name="toolbar"/></declare-styleable>
+    <!-- From: file:/Users/kennethascheri/GitHub/kascheri12/Trendz/library/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="app_name">BlurLibrary</string>
+</resources>

@@ -3,4 +3,8 @@
     <declare-styleable name="TintableImageView">
         <attr name="tint" format="reference|color"/>
     </declare-styleable>
+
+    <declare-styleable name="FontText">
+        <attr name="typefaceAsset" format="string"/>
+    </declare-styleable>
 </resources>

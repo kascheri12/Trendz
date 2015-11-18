@@ -16,12 +16,8 @@ import com.trendzcatalog.trendz.layouts.LinearListView;
  */
 public class ScrollViewFragment extends BaseFragment {
 
-    static final String TAG = "tag.ScrollViewFragment";
-
-    public static ScrollViewFragment newInstance(int color) {
+    public static ScrollViewFragment newInstance() {
         final Bundle bundle = new Bundle();
-        bundle.putInt(ARG_COLOR, color);
-
         final ScrollViewFragment fragment = new ScrollViewFragment();
         fragment.setArguments(bundle);
         return fragment;
@@ -44,12 +40,12 @@ public class ScrollViewFragment extends BaseFragment {
 
     @Override
     public CharSequence getTitle(Resources r) {
-        return "ScrollView";
+        return null;
     }
 
     @Override
     public String getSelfTag() {
-        return TAG;
+        return null;
     }
 
     @Override

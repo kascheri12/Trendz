@@ -1,59 +1,44 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:background="@color/white">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="trendz"
-        android:id="@+id/textview3"
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
         android:layout_gravity="center_horizontal"
-        android:textSize="50dp"
-        xmlns:android="http://schemas.android.com/apk/res/android" />
+        android:background="@color/trendzPrimary">
+        <ImageView
+            android:layout_width="@dimen/title_image_width"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="fitCenter"
+            android:layout_marginTop="@dimen/margin_top_title_dashboard"
+            android:id="@+id/titleImageDashboardFragment"
+            android:background="@color/trendzPrimary"
+            android:src="@drawable/main_logo_1080w"/>
+    </FrameLayout>
+
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/AFrameLayout"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/dashboard_item_grid_margin_top">
-        <TableLayout
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/dashboard_icon_grid_height"
-            android:id="@+id/AGridLayout">
-            <TableRow>
-                <ImageView
-                    android:id="@+id/btnFillItUp"
-                    android:layout_width="@dimen/dashboard_icon_height_width"
-                    android:layout_height="@dimen/dashboard_icon_height_width"
-                    android:background="@drawable/ic_fillitup_1"
-                    android:layout_weight="1" />
-                <ImageView
-                    android:id="@+id/btnCloset"
-                    android:layout_width="@dimen/dashboard_icon_height_width"
-                    android:layout_height="@dimen/dashboard_icon_height_width"
-                    android:background="@drawable/ic_closet_2"
-                    android:layout_weight="1"
-                    />
-            </TableRow>
-            <TableRow>
-                <ImageView
-                    android:id="@+id/btnLaundry"
-                    android:layout_width="@dimen/dashboard_icon_height_width"
-                    android:layout_height="@dimen/dashboard_icon_height_width"
-                    android:background="@drawable/ic_laundry_1"
-                    android:layout_weight="1"
-                    />
-                <ImageView
-                    android:id="@+id/btnPublish"
-                    android:layout_width="@dimen/dashboard_icon_height_width"
-                    android:layout_height="@dimen/dashboard_icon_height_width"
-                    android:background="@drawable/ic_publishit_1"
-                    android:layout_weight="1"
-                    />
-            </TableRow>
 
-        </TableLayout>
+
+        <GridView
+            android:id="@+id/gridview1"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="center"
+            android:verticalSpacing="50dp"
+            android:horizontalSpacing="0dp"
+            android:stretchMode="columnWidth"
+            android:numColumns="2" />
     </FrameLayout>
 
 </FrameLayout>

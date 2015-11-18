@@ -17,12 +17,8 @@ import com.trendzcatalog.trendz.adapters.BaseListAdapter;
  */
 public class ListViewFragment extends BaseFragment {
 
-    static final String TAG = "tag.ListViewFragment";
-
-    public static ListViewFragment newInstance(int color) {
+    public static ListViewFragment newInstance() {
         final Bundle bundle = new Bundle();
-        bundle.putInt(ARG_COLOR, color);
-
         final ListViewFragment fragment = new ListViewFragment();
         fragment.setArguments(bundle);
         return fragment;
@@ -49,17 +45,17 @@ public class ListViewFragment extends BaseFragment {
     }
 
     @Override
+    public boolean canScrollVertically(int direction) {
+        return mListView != null && mListView.canScrollVertically(direction);
+    }
+
+    @Override
     public CharSequence getTitle(Resources r) {
-        return "ListView";
+        return null;
     }
 
     @Override
     public String getSelfTag() {
-        return TAG;
-    }
-
-    @Override
-    public boolean canScrollVertically(int direction) {
-        return mListView != null && mListView.canScrollVertically(direction);
+        return null;
     }
 }

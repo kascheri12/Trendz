@@ -33,12 +33,10 @@
     </array>
 
 
-    <color name="tienPrimary">#FF40EFFF</color>
-    <color name="tienPrimaryDark">#FF006AB6</color>
-    <color name="tienAccent">#000000</color>
+    <color name="trendzPrimary2">#a2e3b9</color>
+    <color name="trendzPrimary3">#8aefae</color>
 
-
-
+    <color name="trendzPrimary">#5bc4c2</color>
 
 
     <color name="primary">#3C515C</color>
