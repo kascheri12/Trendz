@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.trendzcatalog.trendz.R;
 import com.trendzcatalog.trendz.models.ClothingItem;
 
@@ -18,6 +19,7 @@ import java.util.ArrayList;
  */
 public class LayerDrawerAdapter extends BaseAdapter {
 
+    public String url="http://kascheri.asuscomm.com:8099/photos/";
     private ArrayList<ClothingItem> layers;
     private Context context;
 
@@ -48,19 +50,13 @@ public class LayerDrawerAdapter extends BaseAdapter {
         ImageView imageView;
         TextView textView;
 
-
         if(convertView == null){
-            LayoutInflater inflater = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.item_movie, parent,
-                    false);
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.item_movie, parent,false);
         }
 
         imageView = (ImageView)convertView.findViewById(R.id.picture);
-//        textView = (TextView)convertView.findViewById(R.id.text);
-
-        imageView.setImageResource(layer.imageResId);
-//        textView.setText(layer.getTitleResId());
+        Picasso.with(parent.getContext()).load(url+layer.getPhoto()).resize(250,400).into(imageView);
 
         return convertView;
     }

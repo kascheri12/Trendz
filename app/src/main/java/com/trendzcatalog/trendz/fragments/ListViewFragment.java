@@ -10,7 +10,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.trendzcatalog.trendz.R;
-import com.trendzcatalog.trendz.adapters.BaseListAdapter;
+import com.trendzcatalog.trendz.adapters.LayerDrawerAdapter;
+import com.trendzcatalog.trendz.models.ClothingItem;
+
+import java.util.ArrayList;
 
 /**
  * Created by kennethascheri on 10/25/15.
@@ -30,10 +33,29 @@ public class ListViewFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle sis) {
 
         final View view = inflater.inflate(R.layout.fragment_list_view, parent, false);
+        ArrayList<ClothingItem> list = new ArrayList<>(0);
+        list.add(new ClothingItem("pants1.png",R.string.tops));
+        list.add(new ClothingItem("pants2.png",R.string.tops));
+        list.add(new ClothingItem("pants3.png",R.string.tops));
+        list.add(new ClothingItem("shoes1.png",R.string.tops));
+        list.add(new ClothingItem("shoes1.png",R.string.tops));
+        list.add(new ClothingItem("shoes1.png",R.string.tops));
+        list.add(new ClothingItem("shoes1.png",R.string.tops));
+        list.add(new ClothingItem("pants1.png",R.string.tops));
+        list.add(new ClothingItem("pants2.png",R.string.tops));
+        list.add(new ClothingItem("pants3.png",R.string.tops));
+        list.add(new ClothingItem("shoes1.png",R.string.tops));
+        list.add(new ClothingItem("pants1.png",R.string.tops));
+        list.add(new ClothingItem("pants2.png",R.string.tops));
+        list.add(new ClothingItem("pants3.png",R.string.tops));
+        list.add(new ClothingItem("shoes1.png",R.string.tops));
+        list.add(new ClothingItem("pants1.png",R.string.tops));
+        list.add(new ClothingItem("pants2.png",R.string.tops));
+        list.add(new ClothingItem("pants3.png",R.string.tops));
+        list.add(new ClothingItem("shoes1.png",R.string.tops));
 
         mListView = findView(view, R.id.list_view);
-        final BaseListAdapter adapter = new BaseListAdapter(getActivity(), 100);
-        mListView.setAdapter(adapter);
+        mListView.setAdapter(new LayerDrawerAdapter(getActivity(), list));
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

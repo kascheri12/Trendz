@@ -8,6 +8,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="85dp"
@@ -16,7 +17,7 @@
 
         </FrameLayout>
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -25,8 +26,13 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/imageViewSlideLayout"/>
-        </LinearLayout>
+                android:id="@+id/imageViewSlideLayout" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/imageS"
+                android:background="@android:color/transparent"/>
+        </FrameLayout>
 
         <FrameLayout
             android:layout_width="match_parent"

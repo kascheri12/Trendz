@@ -7,6 +7,7 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -28,10 +29,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.trendzcatalog.trendz.R;
-import com.trendzcatalog.trendz.models.RestClient;
+import com.trendzcatalog.trendz.ServiceGenerator;
+import com.trendzcatalog.trendz.models.UserInfo;
+import com.trendzcatalog.trendz.services.LoginService;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit.Call;
+import retrofit.Response;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -56,10 +62,13 @@ public class LoginActivity extends FragmentActivity implements LoaderCallbacks<C
     private View mProgressView;
     private View mLoginFormView;
 
+    private UserInfo mUserInfo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         mEmailView.setBackgroundResource(R.drawable.tags_rounded_corners);
@@ -78,6 +87,7 @@ public class LoginActivity extends FragmentActivity implements LoaderCallbacks<C
             }
         });
 
+
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -86,8 +96,7 @@ public class LoginActivity extends FragmentActivity implements LoaderCallbacks<C
             public boolean onKey(View v, int keyCode, KeyEvent event) {
 
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                        (keyCode == KeyEvent.KEYCODE_ENTER))
-                {
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     attemptLogin();
                     return true;
                 }
@@ -104,17 +113,40 @@ public class LoginActivity extends FragmentActivity implements LoaderCallbacks<C
                 return false;
             }
         });
-//
-//        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-//        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                attemptLogin();
-//            }
-//        });
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        if (isSavedLoginInfo()) {
+            mEmailView.setText(mUserInfo.getUsername());
+            mPasswordView.setText(mUserInfo.getPassword());
+            attemptLogin();
+        }
+
+    }
+
+    private boolean isSavedLoginInfo() {
+        mUserInfo = getSavedLoginInfo();
+        if (mUserInfo.getUserInfoID() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    private void clearSavedLoginInfo() {
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("userInfo", 0);
+        SharedPreferences.Editor edit = pref.edit();
+        edit.clear();
+        edit.commit();
+    }
+
+    private UserInfo getSavedLoginInfo() {
+        UserInfo user = new UserInfo();
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("UserInfo", 0);
+        user.setUserInfoID(pref.getInt("UserInfoID", 0));
+        user.setUsername(pref.getString("Username", null));
+        user.setPassword(pref.getString("Password", null));
+        return user;
     }
 
     private void populateAutoComplete() {
@@ -204,6 +236,7 @@ public class LoginActivity extends FragmentActivity implements LoaderCallbacks<C
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
+            clearSavedLoginInfo();
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
@@ -321,34 +354,36 @@ public class LoginActivity extends FragmentActivity implements LoaderCallbacks<C
 
         private final String mEmail;
         private final String mPassword;
-        private String mError;
+        private int mUserInfoID;
 
         UserLoginTask(String email, String password) {
             mEmail = email;
             mPassword = password;
         }
 
+        private void setSavedLoginInfo(UserInfo mUserInfo) {
+            SharedPreferences pref = getApplicationContext().getSharedPreferences("UserInfo", 0);
+            SharedPreferences.Editor edit = pref.edit();
+            edit.putInt("UserInfoID", mUserInfo.getUserInfoID());
+            edit.putString("Username", mUserInfo.getUsername());
+            edit.putString("Password", mUserInfo.getPassword());
+            edit.commit();
+        }
+
+
         @Override
         protected Boolean doInBackground(Void... params) {
-
-            String s = "http://kascheri.asuscomm.com:8099/Service1.svc/Auth/" + this.mEmail + "/" + this.mPassword;
-            RestClient client = new RestClient(s);
-
+            LoginService loginService = ServiceGenerator.createService(LoginService.class);
+            Call<UserInfo> call = loginService.Validate(this.mEmail, this.mPassword);
             try {
-                client.Execute(RestClient.RequestMethod.GET);
-                mError = client.getResponse();
-
-            } catch (Exception e) {
-                e.printStackTrace();
+                Response<UserInfo> user = call.execute();
+                if (user.body().getUsername() != "") {
+                    mUserInfoID = user.body().getUserInfoID();
+                    return true;
+                }
+            } catch (Exception ex) {
             }
-
-            if (mError.equals("\"You are good to go!\"\n"))
-                return true;
-            if (!mError.isEmpty())
-            {
-                return false;
-            }
-            return true;
+            return false;
         }
 
         @Override
@@ -360,6 +395,7 @@ public class LoginActivity extends FragmentActivity implements LoaderCallbacks<C
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             } else {
+                setSavedLoginInfo(new UserInfo(mUserInfoID, mEmail, mPassword));
                 finish();
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);

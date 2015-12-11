@@ -5,6 +5,7 @@ package com.trendzcatalog.trendz.fragments;
 //import android.app.Fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,7 +26,6 @@ import com.trendzcatalog.trendz.models.DashboardItem;
 import java.util.ArrayList;
 
 public class DashboardFragment extends Fragment {
-    private static int TAKE_PICTURE = 1;
     GridView gridView;
 
     public static DashboardFragment newInstance() {
@@ -72,6 +72,14 @@ public class DashboardFragment extends Fragment {
                     case 2:
                         Intent laundryIntent = new Intent(getActivity(), LaundryActivity.class);
                         startActivity(laundryIntent);
+                        break;
+                    case 3:
+                        SharedPreferences pref = getContext().getSharedPreferences("UserInfo", 0);
+                        SharedPreferences.Editor edit = pref.edit();
+                        edit.clear();
+                        edit.commit();
+                        Toast.makeText(getContext(), "Logged out successfully.", Toast.LENGTH_SHORT).show();
+                        getActivity().finish();
                         break;
                     default:
                         Toast.makeText(getContext(), "HI", Toast.LENGTH_SHORT).show();

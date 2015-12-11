@@ -1,5 +1,6 @@
 package com.trendzcatalog.trendz.fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,10 +10,17 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.trendzcatalog.trendz.R;
+import com.trendzcatalog.trendz.ServiceGenerator;
 import com.trendzcatalog.trendz.adapters.ImageAdapter;
-import com.trendzcatalog.trendz.models.ClothingItem;
+import com.trendzcatalog.trendz.models.ClothingArticle;
+import com.trendzcatalog.trendz.models.StyleType;
+import com.trendzcatalog.trendz.services.ClosetService;
+
+import java.util.List;
 
 import it.moondroid.coverflow.components.ui.containers.FeatureCoverFlow;
+import retrofit.Call;
+import retrofit.Response;
 
 /**
  *  Created by kennethascheri on 11/9/15.
@@ -28,6 +36,11 @@ public class ClosetFragment extends Fragment {
     private ImageAdapter mAdapterMiddle;
     private ImageAdapter mAdapterBottom;
 
+    private ClothingArticleGetTask clothingArticleGetTask;
+    private ClothingArticleGetTask clothingArticleGetTaskBottoms;
+    private ClothingArticleGetTask clothingArticleGetTaskPants;
+
+
     public static ClosetFragment newInstance() {
         final Bundle args = new Bundle();
         final ClosetFragment closetFragment = new ClosetFragment();
@@ -35,7 +48,6 @@ public class ClosetFragment extends Fragment {
         return closetFragment;
     }
     public ClosetFragment() {
-
     }
 
     @Override
@@ -49,26 +61,47 @@ public class ClosetFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_closet, container, false);
 
-        ImageView btn = (ImageView) view.findViewById(R.id.btnButton);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String str = String.valueOf(mCoverFlowTopPos) + " " + String.valueOf(mCoverFlowMiddlePos) + " " + String.valueOf(mCoverFlowBottomPos);
-                Toast.makeText(getActivity(),
-                        " -- " + str + " -- ", Toast.LENGTH_SHORT).show();
-            }
-        });
+        clothingArticleGetTask = new ClothingArticleGetTask();
+        clothingArticleGetTaskBottoms = new ClothingArticleGetTask();
+        clothingArticleGetTaskPants = new ClothingArticleGetTask();
 
+        refreshFlows();
         initFlows(view);
+        initButtons(view);
 
         return view;
     }
 
+    private void refreshFlows() {
+        try {
+            clothingArticleGetTask.execute(new StyleType(1)).get();
+            clothingArticleGetTaskBottoms.execute(new StyleType(2)).get();
+            clothingArticleGetTaskPants.execute(new StyleType(3)).get();
+        } catch (Exception ex) {
+            Toast.makeText(getContext(), ex.getMessage().toString(), Toast.LENGTH_LONG);
+        }
+
+    }
+
+    private void initButtons(View view) {
+        ImageView btn = (ImageView) view.findViewById(R.id.btnButton);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreshFlows();
+
+                String str = String.valueOf(mCoverFlowTopPos) + " " + String.valueOf(mCoverFlowMiddlePos) + " " + String.valueOf(mCoverFlowBottomPos);
+                Toast.makeText(getActivity(),
+                        " -- " + str + " -- ", Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
+
+    }
+
     private void initFlows(View view) {
 
-        mAdapterTop = new ImageAdapter(getContext(), ClothingItem.ClothingItemStyle.TOPS);
-        mAdapterMiddle = new ImageAdapter(getContext(), ClothingItem.ClothingItemStyle.BOTTOMS);
-        mAdapterBottom = new ImageAdapter(getContext(), ClothingItem.ClothingItemStyle.SHOES);
         mCoverFlowTop = (FeatureCoverFlow) view.findViewById(R.id.coverflowtop);
         mCoverFlowMiddle = (FeatureCoverFlow) view.findViewById(R.id.coverflowmiddle);
         mCoverFlowBottom = (FeatureCoverFlow) view.findViewById(R.id.coverflowbottom);
@@ -79,9 +112,12 @@ public class ClosetFragment extends Fragment {
         mCoverFlowTop.setReflectionOpacity(0);
         mCoverFlowMiddle.setReflectionOpacity(0);
         mCoverFlowBottom.setReflectionOpacity(0);
+        mCoverFlowTop.setAdjustPositionMultiplier(2.5f);
+        mCoverFlowMiddle.setAdjustPositionMultiplier(2.5f);
+        mCoverFlowBottom.setAdjustPositionMultiplier(2.5f);
         mCoverFlowTop.setMaxScaleFactor(1.8f);
         mCoverFlowMiddle.setMaxScaleFactor(1.8f);
-        mCoverFlowBottom.setMaxScaleFactor(1.5f);
+        mCoverFlowBottom.setMaxScaleFactor(1.3f);
 
         mCoverFlowTop.setOnScrollPositionListener(new FeatureCoverFlow.OnScrollPositionListener() {
             @Override
@@ -115,5 +151,48 @@ public class ClosetFragment extends Fragment {
 
             }
         });
+    }
+
+    public class ClothingArticleGetTask extends AsyncTask<StyleType, Void, Boolean> {
+
+        ClothingArticleGetTask() {
+            mAdapterTop = new ImageAdapter(getContext());
+            mAdapterMiddle = new ImageAdapter(getContext());
+            mAdapterBottom = new ImageAdapter(getContext());
+        }
+
+        @Override
+        protected Boolean doInBackground(StyleType... params) {
+            int StyleTypeID = params[0].StyleTypeID;
+            ClosetService closetService = ServiceGenerator.createService(ClosetService.class);
+            Call<List<ClothingArticle>> call = closetService.GetClothes("5",String.valueOf(StyleTypeID));
+            try {
+                Response<List<ClothingArticle>> clothes = call.execute();
+                if (clothes.body() != null) {
+                    switch(StyleTypeID) {
+                        case 1:
+                            mAdapterTop.setClothes(clothes.body());
+                            break;
+                        case 2:
+                            mAdapterMiddle.setClothes(clothes.body());
+                            break;
+                        case 3:
+                            mAdapterBottom.setClothes(clothes.body());
+                            break;
+                        default:
+                            break;
+
+                    }
+                    return true;
+                }
+            } catch (Exception ex) {
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+
+        }
     }
 }

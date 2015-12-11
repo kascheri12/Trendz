@@ -41,10 +41,6 @@ public class ScrollableFragment extends Fragment {
         return fragment;
     }
 
-//    private void onCreate(View view) {
-//
-//    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle sis) {
         final View view = inflater.inflate(R.layout.fragment_scrollable, parent, false);

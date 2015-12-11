@@ -36,7 +36,8 @@
 
         <it.moondroid.coverflow.components.ui.containers.FeatureCoverFlow
             android:id="@+id/coverflowtop"
-            android:layout_width="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="250dp"
             android:layout_height="@dimen/closet_flow_feature_height"
             coverflow:coverHeight="@dimen/cover_height"
             coverflow:coverWidth="@dimen/cover_width"
@@ -48,7 +49,8 @@
         <it.moondroid.coverflow.components.ui.containers.FeatureCoverFlow
             android:id="@+id/coverflowmiddle"
             android:layout_marginTop="120dp"
-            android:layout_width="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="250dp"
             android:layout_height="@dimen/closet_flow_feature_height"
             coverflow:coverHeight="@dimen/cover_height"
             coverflow:coverWidth="@dimen/cover_width"
@@ -61,7 +63,8 @@
         <it.moondroid.coverflow.components.ui.containers.FeatureCoverFlow
             android:id="@+id/coverflowbottom"
             android:layout_marginTop="240dp"
-            android:layout_width="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="250dp"
             android:layout_height="@dimen/closet_flow_feature_height"
             coverflow:coverHeight="@dimen/cover_height"
             coverflow:coverWidth="@dimen/cover_width"
@@ -76,12 +79,19 @@
             android:layout_height="fill_parent"
             android:layout_marginTop="360dp">
             <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
+                android:id="@+id/btnButton2"
+                android:paddingLeft="20dp"
+                android:layout_gravity="left"
+                android:src="@drawable/ic_closet_01"/>
+            <ImageView
+                android:layout_width="125dp"
+                android:layout_height="125dp"
                 android:id="@+id/btnButton"
-                android:padding="10dp"
+                android:paddingRight="20dp"
                 android:layout_gravity="right"
-                android:src="@drawable/ic_fillitup_1"
+                android:src="@drawable/ic_fillitup_01"
                 />
         </FrameLayout>
     </FrameLayout>
