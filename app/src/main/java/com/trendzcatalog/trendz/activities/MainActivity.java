@@ -10,9 +10,6 @@ import com.trendzcatalog.trendz.R;
 import com.trendzcatalog.trendz.adapters.MyCircularViewPagerAdapter;
 import com.trendzcatalog.trendz.models.MyItem;
 
-//import android.support.v4.app.FragmentActivity;
-//import android.support.v4.view.ViewPager;
-
 public class MainActivity extends FragmentActivity {
 
     private ViewPager viewPager;

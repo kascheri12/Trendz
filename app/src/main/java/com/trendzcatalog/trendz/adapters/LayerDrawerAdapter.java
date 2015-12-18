@@ -52,10 +52,10 @@ public class LayerDrawerAdapter extends BaseAdapter {
 
         if(convertView == null){
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.item_movie, parent,false);
+            convertView = inflater.inflate(R.layout.item_combination_home, parent,false);
         }
 
-        imageView = (ImageView)convertView.findViewById(R.id.picture);
+        imageView = (ImageView)convertView.findViewById(R.id.top);
         Picasso.with(parent.getContext()).load(url+layer.getPhoto()).resize(250,400).into(imageView);
 
         return convertView;

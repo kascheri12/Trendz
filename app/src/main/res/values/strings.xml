@@ -17,11 +17,13 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
+    <string name="error_username_exists">This email address is already registered</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
     <string name="btnFacebook">login with facebook</string>
-    <string name="login_or_text">or</string>
+    <string name="login_register_text">Register</string>
+    <string name="login_or_text">      or</string>
     <string name="app_title_name">trendz</string>
 
 <!-- TODO: Remove or change this placeholder text -->

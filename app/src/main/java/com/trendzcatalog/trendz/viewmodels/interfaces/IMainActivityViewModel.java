@@ -1,5 +1,6 @@
 package com.trendzcatalog.trendz.viewmodels.interfaces;
 
+import com.trendzcatalog.trendz.models.ClothingArticle;
 import com.trendzcatalog.trendz.models.ImageFile;
 
 import java.util.List;
@@ -9,6 +10,6 @@ import java.util.List;
  */
 public interface IMainActivityViewModel {
 
-    void uploadImageFiles(List<ImageFile> items);
+    void uploadImageFiles(List<ImageFile> items, ClothingArticle ca);
 
 }

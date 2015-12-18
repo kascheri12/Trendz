@@ -30,7 +30,9 @@ import android.widget.TextView;
 
 import com.trendzcatalog.trendz.R;
 import com.trendzcatalog.trendz.ServiceGenerator;
+import com.trendzcatalog.trendz.models.Closet;
 import com.trendzcatalog.trendz.models.UserInfo;
+import com.trendzcatalog.trendz.services.ClosetService;
 import com.trendzcatalog.trendz.services.LoginService;
 
 import java.util.ArrayList;
@@ -55,14 +57,18 @@ public class LoginActivity extends FragmentActivity implements LoaderCallbacks<C
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
+    private UserCreateTask mCreateTask = null;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private View mRegisterView;
+    private boolean mIsUserExists;
 
     private UserInfo mUserInfo;
+    private int mClosetID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +103,7 @@ public class LoginActivity extends FragmentActivity implements LoaderCallbacks<C
 
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    attemptLogin();
+                    attemptLogin(false);
                     return true;
                 }
                 return false;
@@ -107,7 +113,7 @@ public class LoginActivity extends FragmentActivity implements LoaderCallbacks<C
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
+                    attemptLogin(false);
                     return true;
                 }
                 return false;
@@ -117,11 +123,20 @@ public class LoginActivity extends FragmentActivity implements LoaderCallbacks<C
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
+        mRegisterView = (TextView) findViewById(R.id.textViewRegister);
+        mRegisterView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                attemptLogin(true);
+            }
+        });
+
         if (isSavedLoginInfo()) {
             mEmailView.setText(mUserInfo.getUsername());
             mPasswordView.setText(mUserInfo.getPassword());
-            attemptLogin();
+            attemptLogin(false);
         }
+
 
     }
 
@@ -192,13 +207,12 @@ public class LoginActivity extends FragmentActivity implements LoaderCallbacks<C
         }
     }
 
-
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() {
+    private void attemptLogin(boolean register) {
         if (mAuthTask != null) {
             return;
         }
@@ -241,8 +255,13 @@ public class LoginActivity extends FragmentActivity implements LoaderCallbacks<C
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            if (register) {
+                mCreateTask = new UserCreateTask(email, password);
+                mCreateTask.execute((Void) null);
+            } else {
+                mAuthTask = new UserLoginTask(email, password);
+                mAuthTask.execute((Void) null);
+            }
         }
     }
 
@@ -346,40 +365,107 @@ public class LoginActivity extends FragmentActivity implements LoaderCallbacks<C
         mEmailView.setAdapter(adapter);
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
-        private final String mPassword;
-        private int mUserInfoID;
 
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
+    public class UserCreateTask extends AsyncTask<Void, Void, Boolean> {
+        private UserInfo mUserInfo;
+
+        UserCreateTask(String email, String password) {
+            mUserInfo = new UserInfo(0, email, password);
         }
 
-        private void setSavedLoginInfo(UserInfo mUserInfo) {
+        private void setSavedLoginInfo(UserInfo mUserInfo, int ClosetID) {
             SharedPreferences pref = getApplicationContext().getSharedPreferences("UserInfo", 0);
             SharedPreferences.Editor edit = pref.edit();
             edit.putInt("UserInfoID", mUserInfo.getUserInfoID());
             edit.putString("Username", mUserInfo.getUsername());
             edit.putString("Password", mUserInfo.getPassword());
+            edit.putInt("ClosetID", ClosetID);
             edit.commit();
         }
-
 
         @Override
         protected Boolean doInBackground(Void... params) {
             LoginService loginService = ServiceGenerator.createService(LoginService.class);
-            Call<UserInfo> call = loginService.Validate(this.mEmail, this.mPassword);
+            ClosetService closetService = ServiceGenerator.createService(ClosetService.class);
+            Call<UserInfo> call = loginService.Create(this.mUserInfo.getUsername(), this.mUserInfo.getPassword());
+            try {
+                Response<UserInfo> user = call.execute();
+                if (user.body().getUserInfoID() > 0) {
+                    this.mUserInfo.setUserInfoID(user.body().getUserInfoID());
+                    Call<Closet> call1 = closetService.GetClosetByUserID(this.mUserInfo.getUserInfoID());
+                    Response<Closet> closet = call1.execute();
+                    if (closet.body().ClosetID > 0) {
+                        mClosetID = closet.body().ClosetID;
+                        return true;
+                    }
+                }
+            } catch (Exception ex) {
+                ex.toString();
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            mAuthTask = null;
+            showProgress(false);
+
+            if (!success) {
+                mEmailView.setError(getString(R.string.error_username_exists));
+                mEmailView.requestFocus();
+            } else {
+                setSavedLoginInfo(mUserInfo, mClosetID);
+                finish();
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mAuthTask = null;
+            showProgress(false);
+        }
+    }
+
+    /**
+     * Represents an asynchronous login/registration task used to authenticate
+     * the user.
+     */
+    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+        private UserInfo mUserInfo;
+        private int mClosetID;
+
+        UserLoginTask(String email, String password) {
+            this.mUserInfo = new UserInfo(0, email, password);
+        }
+
+        private void setSavedLoginInfo(UserInfo mUserInfo, int ClosetID) {
+            SharedPreferences pref = getApplicationContext().getSharedPreferences("UserInfo", 0);
+            SharedPreferences.Editor edit = pref.edit();
+            edit.putInt("UserInfoID", mUserInfo.getUserInfoID());
+            edit.putString("Username", mUserInfo.getUsername());
+            edit.putString("Password", mUserInfo.getPassword());
+            edit.putInt("ClosetID", ClosetID);
+            edit.commit();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            LoginService loginService = ServiceGenerator.createService(LoginService.class);
+            ClosetService closetService = ServiceGenerator.createService(ClosetService.class);
+            Call<UserInfo> call = loginService.Validate(this.mUserInfo.getUsername(), this.mUserInfo.getPassword());
             try {
                 Response<UserInfo> user = call.execute();
                 if (user.body().getUsername() != "") {
-                    mUserInfoID = user.body().getUserInfoID();
-                    return true;
+                    this.mUserInfo.setUserInfoID(user.body().getUserInfoID());
+                    Call<Closet> call1 = closetService.GetClosetByUserID(mUserInfo.getUserInfoID());
+                    Response<Closet> closet = call1.execute();
+                    if (closet.body().ClosetID > 0) {
+                        mClosetID = closet.body().ClosetID;
+                        return true;
+                    }
                 }
             } catch (Exception ex) {
             }
@@ -395,7 +481,7 @@ public class LoginActivity extends FragmentActivity implements LoaderCallbacks<C
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             } else {
-                setSavedLoginInfo(new UserInfo(mUserInfoID, mEmail, mPassword));
+                setSavedLoginInfo(mUserInfo, mClosetID);
                 finish();
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);

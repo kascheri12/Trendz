@@ -1,5 +1,6 @@
 package com.trendzcatalog.trendz.fragments;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,8 +13,11 @@ import android.widget.Toast;
 import com.trendzcatalog.trendz.R;
 import com.trendzcatalog.trendz.ServiceGenerator;
 import com.trendzcatalog.trendz.adapters.ImageAdapter;
+import com.trendzcatalog.trendz.models.Closet;
 import com.trendzcatalog.trendz.models.ClothingArticle;
+import com.trendzcatalog.trendz.models.Combination;
 import com.trendzcatalog.trendz.models.StyleType;
+import com.trendzcatalog.trendz.models.UserInfo;
 import com.trendzcatalog.trendz.services.ClosetService;
 
 import java.util.List;
@@ -26,6 +30,9 @@ import retrofit.Response;
  *  Created by kennethascheri on 11/9/15.
  */
 public class ClosetFragment extends Fragment {
+    private Closet mCloset;
+    private UserInfo mUserInfo;
+
     private FeatureCoverFlow mCoverFlowTop;
     private FeatureCoverFlow mCoverFlowMiddle;
     private FeatureCoverFlow mCoverFlowBottom;
@@ -36,6 +43,7 @@ public class ClosetFragment extends Fragment {
     private ImageAdapter mAdapterMiddle;
     private ImageAdapter mAdapterBottom;
 
+    private CombinationSaveTask combinationSaveTask;
     private ClothingArticleGetTask clothingArticleGetTask;
     private ClothingArticleGetTask clothingArticleGetTaskBottoms;
     private ClothingArticleGetTask clothingArticleGetTaskPants;
@@ -65,11 +73,23 @@ public class ClosetFragment extends Fragment {
         clothingArticleGetTaskBottoms = new ClothingArticleGetTask();
         clothingArticleGetTaskPants = new ClothingArticleGetTask();
 
+        initUserData();
+
         refreshFlows();
         initFlows(view);
         initButtons(view);
 
         return view;
+    }
+
+    private void initUserData() {
+        initUserInfo();
+    }
+
+    private void initUserInfo() {
+        SharedPreferences pref = getActivity().getSharedPreferences("UserInfo", 0);
+        mUserInfo = new UserInfo(pref.getInt("UserInfoID", 0), pref.getString("Username", null), pref.getString("Password", null));
+        mCloset = new Closet(pref.getInt("ClosetID", 0));
     }
 
     private void refreshFlows() {
@@ -88,13 +108,12 @@ public class ClosetFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                refreshFlows();
+                int topid = mAdapterTop.getItemClothingArticleID(mCoverFlowTopPos);
+                int bottomid = mAdapterMiddle.getItemClothingArticleID(mCoverFlowMiddlePos);
+                int shoesid = mAdapterBottom.getItemClothingArticleID(mCoverFlowBottomPos);
 
-                String str = String.valueOf(mCoverFlowTopPos) + " " + String.valueOf(mCoverFlowMiddlePos) + " " + String.valueOf(mCoverFlowBottomPos);
-                Toast.makeText(getActivity(),
-                        " -- " + str + " -- ", Toast.LENGTH_SHORT).show();
-
-
+                combinationSaveTask = new CombinationSaveTask();
+                combinationSaveTask.execute(new Combination(0, mCloset.ClosetID, topid, bottomid, shoesid, 0, 0));
             }
         });
 
@@ -153,6 +172,35 @@ public class ClosetFragment extends Fragment {
         });
     }
 
+    public class CombinationSaveTask extends AsyncTask<Combination, Void, Boolean> {
+        CombinationSaveTask() {
+        }
+        @Override
+        protected Boolean doInBackground(Combination... params) {
+            Combination c = params[0];
+            ClosetService closetService = ServiceGenerator.createService(ClosetService.class);
+            Call<Combination> call = closetService.SaveCombination(c.CombinationID, c.ClosetID, c.ClothingArticleTopID, c.ClothingArticleBottomID, c.ClothingArticleShoesID, c.ClothingArticleDressesID, c.ClothingArticleLayerID);
+            try {
+                Response<Combination> combinations = call.execute();
+                if (combinations.body() != null
+                        && combinations.body().CombinationID > 0) {
+                    return true;
+                }
+            } catch (Exception ex) {
+
+            }
+            return false;
+        }
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            if (!success) {
+                Toast.makeText(getContext(), "Error saving combination.", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getContext(), "Saved!", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
     public class ClothingArticleGetTask extends AsyncTask<StyleType, Void, Boolean> {
 
         ClothingArticleGetTask() {
@@ -161,11 +209,16 @@ public class ClosetFragment extends Fragment {
             mAdapterBottom = new ImageAdapter(getContext());
         }
 
+        private int getUserInfoID() {
+            SharedPreferences pref = getActivity().getSharedPreferences("UserInfo", 0);
+            return pref.getInt("UserInfoID", 0);
+        }
+
         @Override
         protected Boolean doInBackground(StyleType... params) {
             int StyleTypeID = params[0].StyleTypeID;
             ClosetService closetService = ServiceGenerator.createService(ClosetService.class);
-            Call<List<ClothingArticle>> call = closetService.GetClothes("5",String.valueOf(StyleTypeID));
+            Call<List<ClothingArticle>> call = closetService.GetClothes(String.valueOf(getUserInfoID()),String.valueOf(StyleTypeID));
             try {
                 Response<List<ClothingArticle>> clothes = call.execute();
                 if (clothes.body() != null) {
