@@ -42,6 +42,8 @@ public class ImageAdapter extends BaseAdapter {
         return position;
     }
 
+    public int getItemClothingArticleID(int position) { return mClothes.get(position).ClothingArticleID; }
+
     public View getView(int position, View convertView, ViewGroup parent) {
 
         ImageView i = new ImageView(mContext);

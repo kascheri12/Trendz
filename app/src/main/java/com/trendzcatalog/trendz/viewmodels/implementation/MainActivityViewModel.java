@@ -32,12 +32,17 @@ public class MainActivityViewModel implements IMainActivityViewModel {
     private List<ImageFile> uploadedFiles;
 
     @Override
-    public void uploadImageFiles(List<ImageFile> files) {
-        new UploadFilesTask().execute(files.toArray(new ImageFile[files.size()]));
+    public void uploadImageFiles(List<ImageFile> files, ClothingArticle ca) {
+        new UploadFilesTask(ca).execute(files.toArray(new ImageFile[files.size()]));
     }
 
     class UploadFilesTask extends AsyncTask<ImageFile, String, Integer> {
         Integer totalCount = 0;
+        ClothingArticle clothingArticle;
+
+        public UploadFilesTask(ClothingArticle ca) {
+            clothingArticle = ca;
+        }
 
         @Override
         protected Integer doInBackground(ImageFile... params) {
@@ -61,26 +66,21 @@ public class MainActivityViewModel implements IMainActivityViewModel {
                     public void onResponse(Response<List<ImageFile>> response, Retrofit retrofit) {
                         for (int i = 0; i < response.body().size(); i++) {
                             ImageFile img = response.body().get(i);
-                            ClothingArticle ca = new ClothingArticle(0);
-                            ca.ClosetID = 1;
                             Random r = new Random();
-                            ca.StyleTypeID = r.nextInt(3-1+1) + 1;
-                            ca.SubStyleTypeID = 2;
-                            ca.MaterialID = 1;
-                            ca.ColorID = 3;
-                            ca.ImageFileID = img.getImageFileID();
-                            ca.DateCreated = img.getDateCreated();
-                            ca.LastModified = img.getLastModified();
-                            ca.UpdatedByID = img.getUpdatedByID();
-                            ca.Active = img.getActive();
+                            clothingArticle.ImageFileID = img.getImageFileID();
+                            clothingArticle.DateCreated = img.getDateCreated();
+                            clothingArticle.LastModified = img.getLastModified();
+                            clothingArticle.UpdatedByID = img.getUpdatedByID();
+                            clothingArticle.Active = img.getActive();
                             ClosetService service = ServiceGenerator.createService(ClosetService.class);
-                            Call<ClothingArticle> call = service.SaveClothingArticle(ca.ClothingArticleID,
-                                    ca.ClosetID,
+                            Call<ClothingArticle> call = service.SaveClothingArticle(
+                                    clothingArticle.ClothingArticleID,
+                                    clothingArticle.ClosetID,
                                     img.getImageFileID(),
-                                    ca.StyleTypeID,
-                                    ca.SubStyleTypeID,
-                                    ca.MaterialID,
-                                    ca.ColorID);
+                                    clothingArticle.StyleTypeID,
+                                    clothingArticle.SubStyleTypeID,
+                                    clothingArticle.MaterialID,
+                                    clothingArticle.ColorID);
                             try {
                                 Response<ClothingArticle> cloth = call.execute();
                                 if (cloth != null) {
