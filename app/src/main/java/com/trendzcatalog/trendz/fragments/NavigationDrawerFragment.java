@@ -10,12 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.charbgr.BlurNavigationDrawer.v7.BlurActionBarDrawerToggle;
 import com.trendzcatalog.trendz.R;
 
 public class NavigationDrawerFragment extends Fragment {
-
-    private BlurActionBarDrawerToggle mDrawerToggle;
 
     private DrawerLayout mDrawerLayout;
     private View mFragmentContainerView;

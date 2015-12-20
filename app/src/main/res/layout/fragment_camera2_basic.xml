@@ -31,10 +31,11 @@
 
         <ImageButton
             android:id="@+id/picture"
-            android:layout_width="85dp"
-            android:layout_height="85dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_gravity="center"
             android:scaleType="fitCenter"
+            android:background="@color/transparent"
             android:src="@drawable/ic_camera_icon"/>
 
     </FrameLayout>

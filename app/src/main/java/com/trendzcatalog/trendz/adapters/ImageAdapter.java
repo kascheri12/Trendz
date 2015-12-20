@@ -2,6 +2,7 @@ package com.trendzcatalog.trendz.adapters;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -44,10 +45,18 @@ public class ImageAdapter extends BaseAdapter {
 
     public int getItemClothingArticleID(int position) { return mClothes.get(position).ClothingArticleID; }
 
+    private int getUserInfoID() {
+        SharedPreferences pref = mContext.getSharedPreferences("UserInfo", 0);
+        return pref.getInt("UserInfoID", 0);
+    }
     public View getView(int position, View convertView, ViewGroup parent) {
 
         ImageView i = new ImageView(mContext);
-        Picasso.with(mContext).load(mClothes.get(position).ImageFile.getImageFileLocation()).rotate(90).into(i);
+        if (getUserInfoID() == 1024) {
+            Picasso.with(mContext).load(mClothes.get(position).ImageFile.getImageFileLocation()).into(i);
+        } else {
+            Picasso.with(mContext).load(mClothes.get(position).ImageFile.getImageFileLocation()).rotate(90).into(i);
+        }
         return i;
     }
     /** Returns the size (0.0f to 1.0f) of the views

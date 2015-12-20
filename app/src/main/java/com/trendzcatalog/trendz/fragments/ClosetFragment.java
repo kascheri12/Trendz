@@ -55,8 +55,6 @@ public class ClosetFragment extends Fragment {
         closetFragment.setArguments(args);
         return closetFragment;
     }
-    public ClosetFragment() {
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

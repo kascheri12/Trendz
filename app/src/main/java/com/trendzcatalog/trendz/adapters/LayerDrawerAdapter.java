@@ -19,7 +19,7 @@ import java.util.ArrayList;
  */
 public class LayerDrawerAdapter extends BaseAdapter {
 
-    public String url="http://kascheri.asuscomm.com:8099/photos/";
+    public String url="http://kascheri.asuscomm.com:50100/photos/";
     private ArrayList<ClothingItem> layers;
     private Context context;
 
@@ -52,10 +52,10 @@ public class LayerDrawerAdapter extends BaseAdapter {
 
         if(convertView == null){
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.item_combination_home, parent,false);
+            convertView = inflater.inflate(R.layout.item_layer, parent,false);
         }
 
-        imageView = (ImageView)convertView.findViewById(R.id.top);
+        imageView = (ImageView)convertView.findViewById(R.id.img);
         Picasso.with(parent.getContext()).load(url+layer.getPhoto()).resize(250,400).into(imageView);
 
         return convertView;

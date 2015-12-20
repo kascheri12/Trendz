@@ -2,6 +2,7 @@ package com.trendzcatalog.trendz.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -63,7 +64,11 @@ public class CategorizeFragment extends Fragment {
     public CategorizeFragment() {
         // Required empty public constructor
         mClothingArticle = new ClothingArticle(0);
-        mClothingArticle.ClosetID = 1;
+    }
+
+    private int getClosetIDFromPref() {
+        SharedPreferences pref = getActivity().getSharedPreferences("UserInfo", 0);
+        return pref.getInt("ClosetID", 0);
     }
 
     @Override
@@ -71,6 +76,7 @@ public class CategorizeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         viewModel = new MainActivityViewModel();
         mContext = getActivity();
+        mClothingArticle.ClosetID = getClosetIDFromPref();
 
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -303,7 +309,8 @@ public class CategorizeFragment extends Fragment {
             if (mClothingArticle.StyleTypeID > 0
                     && mClothingArticle.SubStyleTypeID > 0
                     && mClothingArticle.ColorID > 0
-                    && mClothingArticle.MaterialID > 0) {
+                    && mClothingArticle.MaterialID > 0
+                    && mClothingArticle.ClosetID > 0) {
                 uploadFile();
 
             }

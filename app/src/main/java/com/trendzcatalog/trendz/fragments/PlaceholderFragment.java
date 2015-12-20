@@ -38,24 +38,11 @@ public class PlaceholderFragment extends Fragment {
         Resources res = getActivity().getResources();
 
         ArrayList<ClothingItem> layers = new ArrayList<ClothingItem>();
-        layers.add(new ClothingItem("pants1.png", R.string.title2 ));
-        layers.add(new ClothingItem("pants2.png", R.string.title2));
-        layers.add(new ClothingItem("pants3.png", R.string.title2));
-        layers.add(new ClothingItem("pants1.png", R.string.title2 ));
-        layers.add(new ClothingItem("pants2.png", R.string.title2));
-        layers.add(new ClothingItem("pants3.png", R.string.title2));
-        layers.add(new ClothingItem("pants1.png", R.string.title2 ));
-        layers.add(new ClothingItem("pants2.png", R.string.title2));
-        layers.add(new ClothingItem("pants3.png", R.string.title2));
-        layers.add(new ClothingItem("pants1.png", R.string.title2 ));
-        layers.add(new ClothingItem("pants2.png", R.string.title2));
-        layers.add(new ClothingItem("pants3.png", R.string.title2));
-        layers.add(new ClothingItem("pants1.png", R.string.title2 ));
-        layers.add(new ClothingItem("pants2.png", R.string.title2));
-        layers.add(new ClothingItem("pants3.png", R.string.title2));
-        layers.add(new ClothingItem("pants1.png", R.string.title2 ));
-        layers.add(new ClothingItem("pants2.png", R.string.title2));
-        layers.add(new ClothingItem("pants3.png", R.string.title2));
+        layers.add(new ClothingItem("uploads/2015-12-19/top_black_1.png", R.string.title2 ));
+        layers.add(new ClothingItem("uploads/2015-12-19/top_black_1.png", R.string.title2));
+        layers.add(new ClothingItem("uploads/2015-12-19/top_black_1.png", R.string.title2));
+        layers.add(new ClothingItem("uploads/2015-12-19/top_black_1.png", R.string.title2 ));
+        layers.add(new ClothingItem("uploads/2015-12-19/top_black_1.png", R.string.title2));
 
         gridView.setAdapter(new LayerDrawerAdapter(getActivity(), layers));
 

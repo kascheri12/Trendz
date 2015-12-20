@@ -1,6 +1,7 @@
 package com.trendzcatalog.trendz.adapters;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,11 @@ public class HomeCombinationsAdapter extends BaseAdapter {
         return 0;
     }
 
+    private int getUserInfoID() {
+        SharedPreferences pref = this.context.getSharedPreferences("UserInfo", 0);
+        return pref.getInt("UserInfoID", 0);
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -61,9 +67,15 @@ public class HomeCombinationsAdapter extends BaseAdapter {
         imageViews.add((ImageView) convertView.findViewById(R.id.dress));
         imageViews.add((ImageView) convertView.findViewById(R.id.layer));
 
-        Picasso.with(parent.getContext()).load(layer.ClothingArticleTop.ImageFile.getImageFileLocation()).rotate(90).resizeDimen(R.dimen.profile_combination_image_width,R.dimen.profile_combination_image_height).into(imageViews.get(0));
-        Picasso.with(parent.getContext()).load(layer.ClothingArticleBottom.ImageFile.getImageFileLocation()).rotate(90).resizeDimen(R.dimen.profile_combination_image_width, R.dimen.profile_combination_image_height).into(imageViews.get(1));
-        Picasso.with(parent.getContext()).load(layer.ClothingArticleShoes.ImageFile.getImageFileLocation()).rotate(90).resizeDimen(R.dimen.profile_combination_image_width, R.dimen.profile_combination_image_height).into(imageViews.get(2));
+        if (getUserInfoID() == 1024) {
+            Picasso.with(parent.getContext()).load(layer.ClothingArticleTop.ImageFile.getImageFileLocation()).resizeDimen(R.dimen.profile_combination_image_width, R.dimen.profile_combination_image_height).into(imageViews.get(0));
+            Picasso.with(parent.getContext()).load(layer.ClothingArticleBottom.ImageFile.getImageFileLocation()).resizeDimen(R.dimen.profile_combination_image_width, R.dimen.profile_combination_image_height).into(imageViews.get(1));
+            Picasso.with(parent.getContext()).load(layer.ClothingArticleShoes.ImageFile.getImageFileLocation()).resizeDimen(R.dimen.profile_combination_image_width, R.dimen.profile_combination_image_height).into(imageViews.get(2));
+        } else {
+            Picasso.with(parent.getContext()).load(layer.ClothingArticleTop.ImageFile.getImageFileLocation()).rotate(90).resizeDimen(R.dimen.profile_combination_image_width, R.dimen.profile_combination_image_height).into(imageViews.get(0));
+            Picasso.with(parent.getContext()).load(layer.ClothingArticleBottom.ImageFile.getImageFileLocation()).rotate(90).resizeDimen(R.dimen.profile_combination_image_width, R.dimen.profile_combination_image_height).into(imageViews.get(1));
+            Picasso.with(parent.getContext()).load(layer.ClothingArticleShoes.ImageFile.getImageFileLocation()).rotate(90).resizeDimen(R.dimen.profile_combination_image_width, R.dimen.profile_combination_image_height).into(imageViews.get(2));
+        }
 
         return convertView;
     }
